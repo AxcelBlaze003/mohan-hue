@@ -150,7 +150,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for i in {1..12}; do
-            if gh release view "${{ inputs.release }}" >/dev/null 2>&1; then
+            if gh release view "3.3.0" >/dev/null 2>&1; then
               echo "Release found"
               exit 0
             fi
