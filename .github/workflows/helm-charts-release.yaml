@@ -145,9 +145,9 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           
-	  - name: Wait until release exists
+      - name: Wait until release exists
         env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for i in {1..12}; do
             if gh release view "${{ inputs.release }}" >/dev/null 2>&1; then
