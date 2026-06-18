@@ -169,7 +169,7 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: "Release-drafter"
-        uses: axcelblaze003/mohanrelease-drafter@main
+        uses: axcelblaze003/mohanrelease-drafter@master
         with:
           config-name: release-drafter-config.yml
           publish: true
