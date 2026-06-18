@@ -134,6 +134,43 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Run chart-releaser
+        #continue-on-error: true
+        uses: netcracker/chart-releaser-action@main
+        with:
+          charts_dir: chart/helm
+          release_name_template: ${{ inputs.release }}
+          skip_existing: true
+          skip_upload: true
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          
+	  - name: Wait until release exists
+        env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in {1..12}; do
+            if gh release view "${{ inputs.release }}" >/dev/null 2>&1; then
+              echo "Release found"
+              exit 0
+            fi
+            echo "Waiting for release..."
+            sleep 5
+          done
+
+          echo "Release not found after waiting"
+          exit 1
+
+      - name: "Release-drafter"
+        uses: axcelblaze003/mohanrelease-drafter@master
+        with:
+          config-name: release-drafter-config.yml
+          publish: true
+          name: ${{ inputs.release }}
+          tag: ${{ inputs.release }}
+          version: ${{ inputs.release }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Assets
         uses: netcracker/qubership-workflow-hub/actions/assets-action@v2.4.0
         with:
